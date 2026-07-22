@@ -1,10 +1,20 @@
 "use client";
 
 import React, { useRef, useEffect } from "react";
-import Image from "next/image";
+import dynamic from "next/dynamic";
 import gsap from "gsap";
 import MagneticButton from "./MagneticButton";
 import HeroDashboardMock from "./HeroDashboardMock";
+
+// Dynamically import Hero3DScene to avoid SSR canvas mismatches
+const Hero3DScene = dynamic(() => import("./Hero3DScene"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full flex items-center justify-center text-xs font-sans text-mint font-bold uppercase tracking-wider">
+      Loading 3D Engine...
+    </div>
+  ),
+});
 
 export default function Hero() {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -128,7 +138,7 @@ export default function Hero() {
       {/* Background Glow blob */}
       <div
         ref={glowRef}
-        className="hero-glow-container absolute w-[300px] h-[300px] rounded-full glow-spot-coral pointer-events-none z-0 mix-blend-screen opacity-70 blur-3xl transition-opacity duration-300"
+        className="hero-glow-container absolute w-[350px] h-[350px] rounded-full glow-spot-coral pointer-events-none z-0 opacity-80 blur-3xl transition-opacity duration-300"
         style={{ transform: "translate3d(0, 0, 0)" }}
       />
 
@@ -149,7 +159,7 @@ export default function Hero() {
           {/* Heading */}
           <h1
             ref={titleRef}
-            className="font-display font-bold leading-[1.05] tracking-tight text-[clamp(40px,5.4vw,64px)] text-text mb-6 opacity-0"
+            className="font-display font-bold leading-[1.05] tracking-tight text-[clamp(42px,5.6vw,68px)] text-text mb-6 opacity-0"
           >
             We build the <span className="text-coral">engine</span> behind your growth.
           </h1>
@@ -173,7 +183,7 @@ export default function Hero() {
                 href="https://calendly.com/startnent"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-coral text-bg px-8 py-3.5 rounded-btn font-sans font-bold text-[15px] hover:scale-[1.03] active:scale-[0.98] transition-transform duration-300 shadow-lg shadow-coral/20"
+                className="bg-coral text-bg px-8 py-3.5 rounded-btn font-sans font-bold text-[15px] hover:scale-[1.03] active:scale-[0.98] transition-transform duration-300 shadow-xl shadow-coral/30"
               >
                 Book a call
               </a>
@@ -192,7 +202,7 @@ export default function Hero() {
           {/* Stat Row */}
           <div
             ref={statsRef}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 pt-8 border-t border-border w-full max-w-xl opacity-0"
+            className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 pt-8 border-t border-border/80 w-full max-w-xl opacity-0"
           >
             <div>
               <div className="font-display font-bold text-3xl md:text-4xl text-text mb-1">
@@ -222,24 +232,11 @@ export default function Hero() {
 
         </div>
 
-        {/* Right SaaS Dashboard + 3D Clay Engine Container */}
+        {/* Right Live 3D Model WebGL Scene + SaaS Dashboard */}
         <div className="lg:col-span-6 flex flex-col space-y-6">
-          {/* 3D Clay Machine Header Visual */}
-          <div className="relative w-full h-[200px] md:h-[240px] rounded-2xl overflow-hidden border border-border/80 bg-surface shadow-2xl">
-            <Image
-              src="/media/hero-clay-sculpture.png"
-              alt="3D Clay Automation Engine"
-              fill
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover hover:scale-105 transition-transform duration-700 ease-out"
-              priority
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent opacity-80" />
-            <div className="absolute bottom-4 left-4 z-10">
-              <span className="px-3 py-1 rounded-btn font-sans font-bold text-xs uppercase tracking-wider bg-coral/20 border border-coral/40 text-coral backdrop-blur-md">
-                3D System Machinery
-              </span>
-            </div>
+          {/* Live Interactive 3D Model WebGL Canvas */}
+          <div className="relative w-full h-[280px] md:h-[340px] rounded-2xl overflow-hidden border border-border/80 bg-surface shadow-2xl backdrop-blur-xl">
+            <Hero3DScene />
           </div>
 
           {/* Interactive SaaS Dashboard Mockup */}

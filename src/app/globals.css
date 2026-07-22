@@ -3,16 +3,17 @@
 @tailwind utilities;
 
 :root {
-  --bg: #14121A;
-  --bg-alt: #1A1622;
-  --surface: #1F1A29;
-  --surface-2: #26202F;
-  --text: #F4EFE6;
-  --text-muted: #A79EB2;
-  --coral: #FF6B4A;
-  --mint: #6EE7C9;
-  --violet: #B79CFF;
-  --border: rgba(244, 239, 230, 0.09);
+  --bg: #0B0813;
+  --bg-alt: #130F22;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-2: rgba(255, 255, 255, 0.08);
+  --text: #FFFFFF;
+  --text-muted: #CBD5E1;
+  --coral: #FF3B5C;
+  --mint: #00F5B8;
+  --violet: #A855F7;
+  --cyan: #38BDF8;
+  --border: rgba(255, 255, 255, 0.12);
 }
 
 * {
@@ -30,7 +31,7 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom Typography settings as specified in design tokens */
+/* Custom Typography settings */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-bricolage), sans-serif;
   letter-spacing: -0.02em;
@@ -42,22 +43,25 @@ body {
   font-family: var(--font-manrope), sans-serif;
 }
 
-/* Layout utilities for ambient glows */
-.bg-glow-radial {
-  background: radial-gradient(circle at center, var(--tw-gradient-stops));
-}
-
-/* Core glows */
+/* High-Vibrancy Glowing Gradients */
 .glow-spot-coral {
-  background: radial-gradient(circle, rgba(255, 107, 74, 0.1) 0%, transparent 65%);
+  background: radial-gradient(circle, rgba(255, 59, 92, 0.25) 0%, transparent 65%);
 }
 
 .glow-spot-mint {
-  background: radial-gradient(circle, rgba(110, 231, 201, 0.08) 0%, transparent 65%);
+  background: radial-gradient(circle, rgba(0, 245, 184, 0.22) 0%, transparent 65%);
 }
 
 .glow-spot-violet {
-  background: radial-gradient(circle, rgba(183, 156, 255, 0.08) 0%, transparent 65%);
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.22) 0%, transparent 65%);
+}
+
+/* Glassmorphism utility card */
+.glass-panel {
+  background: var(--surface);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
 }
 
 /* Custom Scrollbar */
@@ -68,11 +72,11 @@ body {
   background: var(--bg);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--surface);
+  background: rgba(255, 255, 255, 0.15);
   border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--surface-2);
+  background: rgba(255, 255, 255, 0.25);
 }
 
 /* Smooth transitions */
@@ -80,7 +84,6 @@ body {
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Custom utility for cursor glow container */
 .hero-glow-container {
   pointer-events: none;
   mix-blend-mode: screen;

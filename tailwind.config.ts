@@ -18,6 +18,7 @@ const config: Config = {
         coral: "var(--coral)",
         mint: "var(--mint)",
         violet: "var(--violet)",
+        cyan: "var(--cyan)",
         border: "var(--border)",
       },
       fontFamily: {
@@ -28,11 +29,6 @@ const config: Config = {
         card: "24px",
         btn: "100px",
         panel: "32px",
-      },
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
     },
   },
