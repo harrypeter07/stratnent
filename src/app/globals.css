@@ -3,31 +3,85 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --bg: #14121A;
+  --bg-alt: #1A1622;
+  --surface: #1F1A29;
+  --surface-2: #26202F;
+  --text: #F4EFE6;
+  --text-muted: #A79EB2;
+  --coral: #FF6B4A;
+  --mint: #6EE7C9;
+  --violet: #B79CFF;
+  --border: rgba(244, 239, 230, 0.09);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background-color: var(--bg);
+  color: var(--text);
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Typography settings as specified in design tokens */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-bricolage), sans-serif;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: var(--text);
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  font-family: var(--font-manrope), sans-serif;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+/* Layout utilities for ambient glows */
+.bg-glow-radial {
+  background: radial-gradient(circle at center, var(--tw-gradient-stops));
+}
+
+/* Core glows */
+.glow-spot-coral {
+  background: radial-gradient(circle, rgba(255, 107, 74, 0.1) 0%, transparent 65%);
+}
+
+.glow-spot-mint {
+  background: radial-gradient(circle, rgba(110, 231, 201, 0.08) 0%, transparent 65%);
+}
+
+.glow-spot-violet {
+  background: radial-gradient(circle, rgba(183, 156, 255, 0.08) 0%, transparent 65%);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--surface);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--surface-2);
+}
+
+/* Smooth transitions */
+.transition-custom {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Custom utility for cursor glow container */
+.hero-glow-container {
+  pointer-events: none;
+  mix-blend-mode: screen;
 }
