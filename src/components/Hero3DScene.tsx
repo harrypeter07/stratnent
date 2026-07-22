@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Float, MeshDistortMaterial, OrbitControls, Sphere } from "@react-three/drei";
+import { Float, MeshDistortMaterial, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 
 function FloatingCoreMesh() {
@@ -60,6 +60,20 @@ function OrbitingSphere({ position, color, radius = 0.25, speed = 1 }: { positio
 }
 
 export default function Hero3DScene() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div className="w-full h-full flex items-center justify-center text-xs font-sans text-mint font-bold uppercase tracking-wider">
+        Initializing 3D Engine...
+      </div>
+    );
+  }
+
   return (
     <div className="w-full h-full relative cursor-grab active:cursor-grabbing select-none">
       {/* Dynamic Canvas Container */}
