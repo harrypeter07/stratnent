@@ -3,7 +3,7 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import NodeGraphStrip from "@/components/NodeGraphStrip";
 import Services from "@/components/Services";
-import Process from "@/components/Process";
+import ProcessHorizontal from "@/components/ProcessHorizontal";
 import Work from "@/components/Work";
 import Stack from "@/components/Stack";
 import CTAPanel from "@/components/CTAPanel";
@@ -16,11 +16,11 @@ export default function Home() {
       <Navbar />
 
       {/* Main Content Sections */}
-      <main className="relative z-10">
+      <main className="relative z-10 overflow-hidden">
         {/* 1. Hero Section */}
         <Hero />
 
-        {/* 2. Services Section */}
+        {/* 2. Services Section with 3D Render Glass Cards */}
         <div className="relative">
           <Services />
           {/* Animated node strip at transition area */}
@@ -32,8 +32,8 @@ export default function Home() {
           </div>
         </div>
 
-        {/* 3. Process Section */}
-        <Process />
+        {/* 3. Horizontal Side-Scroll Delivery Pipeline */}
+        <ProcessHorizontal />
 
         {/* 4. Case Studies Showcase */}
         <Work />

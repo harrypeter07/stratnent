@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Target, Mail, ShieldAlert, GitFork } from "lucide-react";
+import Card3DTilt from "./Card3DTilt";
 import { servicesData } from "@/config/projects";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -20,13 +21,13 @@ export default function Services() {
     // Trigger reveal of all cards staggered
     gsap.fromTo(
       cards,
-      { y: 50, opacity: 0 },
+      { y: 60, opacity: 0 },
       {
         y: 0,
         opacity: 1,
-        duration: 0.8,
-        stagger: 0.08,
-        ease: "power2.out",
+        duration: 0.9,
+        stagger: 0.1,
+        ease: "power3.out",
         scrollTrigger: {
           trigger: section,
           start: "top 75%",
@@ -44,34 +45,32 @@ export default function Services() {
     };
   }, []);
 
-  const getIcon = (id: string, accent: string) => {
-    const iconClass = "w-6 h-6 transition-transform duration-700 ease-in-out group-hover:rotate-[360deg]";
-    
+  const getCardImage = (id: string) => {
     switch (id) {
       case "lead-gen":
-        return <Target className={`${iconClass} text-coral`} />;
+        return "/media/card-leadgen.png";
       case "outbound-seq":
-        return <Mail className={`${iconClass} text-mint`} />;
+        return "/media/card-outbound.png";
       case "crm-enrich":
-        return <ShieldAlert className={`${iconClass} text-violet`} />;
+        return "/media/card-crm.png";
       default:
-        return <GitFork className={`${iconClass} text-coral`} />;
+        return "/media/card-n8n.png";
     }
   };
 
-  const getAccentClass = (accent: string) => {
+  const getBadgeColor = (accent: string) => {
     switch (accent) {
       case "mint":
-        return "border-mint/20 hover:border-mint/60 hover:shadow-[0_0_20px_rgba(110,231,201,0.04)]";
+        return "bg-mint/10 border-mint/30 text-mint";
       case "violet":
-        return "border-violet/20 hover:border-violet/60 hover:shadow-[0_0_20px_rgba(183,156,255,0.04)]";
+        return "bg-violet/10 border-violet/30 text-violet";
       default:
-        return "border-coral/20 hover:border-coral/60 hover:shadow-[0_0_20px_rgba(255,107,74,0.04)]";
+        return "bg-coral/10 border-coral/30 text-coral";
     }
   };
 
   return (
-    <section id="services" ref={sectionRef} className="py-24 max-w-7xl mx-auto px-6 md:px-12 relative overflow-hidden">
+    <section id="services" ref={sectionRef} className="py-28 max-w-7xl mx-auto px-6 md:px-12 relative overflow-hidden">
       
       {/* Background ambient radial glow */}
       <div className="absolute top-1/2 left-1/4 w-[500px] h-[500px] rounded-full glow-spot-violet opacity-30 blur-3xl -translate-y-1/2 -z-10" />
@@ -79,45 +78,67 @@ export default function Services() {
       {/* Header Info */}
       <div className="max-w-2xl mb-16">
         <span className="text-mint uppercase tracking-wider text-xs md:text-sm font-bold font-sans block mb-3">
-          Our Services
+          Our 3D Core Services
         </span>
         <h2 className="font-display font-bold leading-tight tracking-tight text-[clamp(30px,3.6vw,44px)] text-text mb-6">
-          Everything you need to automate your outbound machine.
+          Automated sales & revenue engines built on n8n.
         </h2>
         <p className="font-sans font-medium text-text-muted text-base md:text-[17px] leading-relaxed">
-          We take the heavy lifting of lead research, scoring, sequencing, and syncing off your plate by writing custom pipelines that live in the cloud.
+          We construct custom lead pipelines, real-time enrichment vaults, and intent signal sequence loaders to fill your pipeline 24/7.
         </p>
       </div>
 
-      {/* Grid container */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+      {/* Grid container with 3D Tilt Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
         {servicesData.map((service, idx) => (
           <div
             key={service.id}
             ref={(el) => {
               if (el) cardsRef.current[idx] = el;
             }}
-            className={`group bg-surface p-8 rounded-card border transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between items-start opacity-0 ${getAccentClass(
-              service.accent
-            )}`}
+            className="opacity-0"
           >
-            {/* Icon circle chip */}
-            <div className="bg-bg-alt w-12 h-12 rounded-xl flex items-center justify-center border border-border mb-6 group-hover:scale-105 transition-transform duration-300">
-              {getIcon(service.id, service.accent)}
-            </div>
+            <Card3DTilt maxTilt={10} className="h-full rounded-card">
+              <div className="bg-surface rounded-card border border-border/80 p-8 flex flex-col justify-between h-full shadow-2xl group hover:border-coral/40 transition-colors duration-300">
+                
+                {/* 3D Render Image Container */}
+                <div className="relative w-full h-[220px] rounded-2xl overflow-hidden mb-6 border border-border/60 bg-bg/50">
+                  <Image
+                    src={getCardImage(service.id)}
+                    alt={service.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                    priority={idx < 2}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent opacity-80" />
 
-            {/* Contents */}
-            <div>
-              <h3 className="font-display font-bold text-xl md:text-2xl text-text mb-4">
-                {service.title}
-              </h3>
-              <p className="font-sans font-medium text-text-muted text-sm md:text-[16px] leading-relaxed">
-                {service.description}
-              </p>
-            </div>
-            
-            {/* Card visual connector line effect */}
-            <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-border to-transparent mt-8 group-hover:via-coral/30 transition-all duration-500" />
+                  {/* 3D Badge Overlay */}
+                  <div className="absolute top-4 left-4 z-10">
+                    <span
+                      className={`px-3 py-1 rounded-btn font-sans font-bold text-xs uppercase tracking-wider border backdrop-blur-md ${getBadgeColor(
+                        service.accent
+                      )}`}
+                    >
+                      3D Module
+                    </span>
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div>
+                  <h3 className="font-display font-bold text-2xl text-text mb-3 group-hover:text-coral transition-colors duration-300">
+                    {service.title}
+                  </h3>
+                  <p className="font-sans font-medium text-text-muted text-sm md:text-[15px] leading-relaxed mb-6">
+                    {service.description}
+                  </p>
+                </div>
+
+                {/* Bottom line separator */}
+                <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-border to-transparent mt-4 group-hover:via-coral/40 transition-all duration-500" />
+              </div>
+            </Card3DTilt>
           </div>
         ))}
       </div>
