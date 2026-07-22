@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useRef, useEffect } from "react";
+import Image from "next/image";
 import gsap from "gsap";
 import MagneticButton from "./MagneticButton";
-import FlowCoreCanvas from "./FlowCoreCanvas";
+import HeroDashboardMock from "./HeroDashboardMock";
 
 export default function Hero() {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -14,7 +15,6 @@ export default function Hero() {
   const ctaRef = useRef<HTMLDivElement>(null);
   const statsRef = useRef<HTMLDivElement>(null);
   
-  // Ref elements for counter animation
   const counterValRef1 = useRef<HTMLSpanElement>(null);
   const counterValRef2 = useRef<HTMLSpanElement>(null);
 
@@ -23,7 +23,6 @@ export default function Hero() {
     const glow = glowRef.current;
     if (!hero) return;
 
-    // 1. Mouse-following glow trail (disabled on touch devices)
     const isTouch = window.matchMedia("(pointer: coarse)").matches;
     if (isTouch && glow) {
       glow.style.display = "none";
@@ -33,15 +32,13 @@ export default function Hero() {
 
       const handleMouseMove = (e: MouseEvent) => {
         const rect = hero.getBoundingClientRect();
-        const x = e.clientX - rect.left - 150; // offset 150px (half of 300px glow width)
+        const x = e.clientX - rect.left - 150;
         const y = e.clientY - rect.top - 150;
         xTo(x);
         yTo(y);
       };
 
       hero.addEventListener("mousemove", handleMouseMove);
-      
-      // Cleanup mouse listener
       return () => {
         hero.removeEventListener("mousemove", handleMouseMove);
       };
@@ -49,7 +46,6 @@ export default function Hero() {
   }, []);
 
   useEffect(() => {
-    // 2. On Load Stagger entry animation (~0.9s, power3.out)
     const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
     tl.fromTo(
@@ -82,7 +78,6 @@ export default function Hero() {
         "-=0.5"
       );
 
-    // 3. Stat counters count up from 0
     const countObj = { num1: 0, num2: 0 };
     
     tl.to(countObj, {
@@ -128,7 +123,7 @@ export default function Hero() {
     <section
       id="hero"
       ref={heroRef}
-      className="relative min-h-[95vh] pt-32 pb-16 flex items-center overflow-hidden max-w-7xl mx-auto px-6 md:px-12"
+      className="relative min-h-[95vh] pt-32 pb-20 flex flex-col justify-center max-w-7xl mx-auto px-6 md:px-12"
     >
       {/* Background Glow blob */}
       <div
@@ -137,10 +132,10 @@ export default function Hero() {
         style={{ transform: "translate3d(0, 0, 0)" }}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 w-full items-center relative z-10">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 w-full items-center relative z-10">
         
         {/* Left Copy Container */}
-        <div className="lg:col-span-7 flex flex-col items-start text-left">
+        <div className="lg:col-span-6 flex flex-col items-start text-left">
           
           {/* Eyebrow */}
           <span
@@ -154,7 +149,7 @@ export default function Hero() {
           {/* Heading */}
           <h1
             ref={titleRef}
-            className="font-display font-bold leading-[1.05] tracking-tight text-[clamp(40px,5.6vw,68px)] text-text mb-6 opacity-0"
+            className="font-display font-bold leading-[1.05] tracking-tight text-[clamp(40px,5.4vw,64px)] text-text mb-6 opacity-0"
           >
             We build the <span className="text-coral">engine</span> behind your growth.
           </h1>
@@ -178,7 +173,7 @@ export default function Hero() {
                 href="https://calendly.com/startnent"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-coral text-bg px-8 py-3.5 rounded-btn font-sans font-bold text-[15px] hover:scale-[1.03] active:scale-[0.98] transition-transform duration-300"
+                className="bg-coral text-bg px-8 py-3.5 rounded-btn font-sans font-bold text-[15px] hover:scale-[1.03] active:scale-[0.98] transition-transform duration-300 shadow-lg shadow-coral/20"
               >
                 Book a call
               </a>
@@ -227,12 +222,28 @@ export default function Hero() {
 
         </div>
 
-        {/* Right Canvas Container */}
-        <div className="lg:col-span-5 relative w-full h-[400px] sm:h-[500px] lg:h-[600px] flex items-center justify-center">
-          <FlowCoreCanvas
-            sectionId="hero"
-            className="w-full h-full scale-100 lg:scale-110 lg:translate-x-10"
-          />
+        {/* Right SaaS Dashboard + 3D Clay Engine Container */}
+        <div className="lg:col-span-6 flex flex-col space-y-6">
+          {/* 3D Clay Machine Header Visual */}
+          <div className="relative w-full h-[200px] md:h-[240px] rounded-2xl overflow-hidden border border-border/80 bg-surface shadow-2xl">
+            <Image
+              src="/media/hero-clay-sculpture.png"
+              alt="3D Clay Automation Engine"
+              fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover hover:scale-105 transition-transform duration-700 ease-out"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent opacity-80" />
+            <div className="absolute bottom-4 left-4 z-10">
+              <span className="px-3 py-1 rounded-btn font-sans font-bold text-xs uppercase tracking-wider bg-coral/20 border border-coral/40 text-coral backdrop-blur-md">
+                3D System Machinery
+              </span>
+            </div>
+          </div>
+
+          {/* Interactive SaaS Dashboard Mockup */}
+          <HeroDashboardMock />
         </div>
 
       </div>

@@ -2,7 +2,7 @@ import React from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import NodeGraphStrip from "@/components/NodeGraphStrip";
-import Services from "@/components/Services";
+import BentoServicesUI from "@/components/BentoServicesUI";
 import ProcessHorizontal from "@/components/ProcessHorizontal";
 import Work from "@/components/Work";
 import Stack from "@/components/Stack";
@@ -17,12 +17,12 @@ export default function Home() {
 
       {/* Main Content Sections */}
       <main className="relative z-10 overflow-hidden">
-        {/* 1. Hero Section */}
+        {/* 1. Hero Section with 3D Clay Engine & Live Dashboard UI */}
         <Hero />
 
-        {/* 2. Services Section with 3D Render Glass Cards */}
+        {/* 2. Professional Bento UI Services Section */}
         <div className="relative">
-          <Services />
+          <BentoServicesUI />
           {/* Animated node strip at transition area */}
           <div className="max-w-7xl mx-auto px-6 md:px-12 py-12 border-t border-b border-border/40">
             <span className="text-[11px] font-sans font-bold uppercase tracking-[0.2em] text-text-muted/60 text-center block mb-6">
