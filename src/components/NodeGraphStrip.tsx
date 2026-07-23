@@ -24,7 +24,6 @@ export default function NodeGraphStrip() {
     { id: "6", name: "Slack Alert", type: "output", x: 860, y: 220 },
   ];
 
-  // SVG Connection Path strings
   const getPath = (n1: NodeData, n2: NodeData) => {
     const dx = n2.x - n1.x;
     return `M ${n1.x} ${n1.y} C ${n1.x + dx * 0.5} ${n1.y}, ${n2.x - dx * 0.5} ${n2.y}, ${n2.x} ${n2.y}`;
@@ -34,25 +33,28 @@ export default function NodeGraphStrip() {
     const container = containerRef.current;
     if (!container) return;
 
+    let isMounted = true;
+    const timeouts: NodeJS.Timeout[] = [];
     const pulses = pulseRefs.current;
     if (!pulses || pulses.length === 0) return;
 
-    // Animating data packet flow along paths
     pulses.forEach((pulse, idx) => {
       if (!pulse) return;
       const pathId = `path-${idx}`;
       const pathElement = container.querySelector(`#${pathId}`) as SVGPathElement;
       if (!pathElement) return;
 
-      const pathLength = pathElement.getTotalLength();
+      let pathLength = 0;
+      try {
+        pathLength = pathElement.getTotalLength();
+      } catch (e) {
+        return;
+      }
 
-      // Set initial values
-      gsap.set(pulse, {
-        opacity: 0,
-      });
+      gsap.set(pulse, { opacity: 0 });
 
-      // Infinite loop to animate pulse along path
       const runPulse = () => {
+        if (!isMounted) return;
         const valObj = { progress: 0 };
         gsap.to(valObj, {
           progress: 1,
@@ -60,26 +62,33 @@ export default function NodeGraphStrip() {
           ease: "power1.inOut",
           delay: idx * 1.2,
           onStart: () => {
-            gsap.set(pulse, { opacity: 1 });
+            if (isMounted) gsap.set(pulse, { opacity: 1 });
           },
           onUpdate: () => {
-            const point = pathElement.getPointAtLength(valObj.progress * pathLength);
-            gsap.set(pulse, { attr: { cx: point.x, cy: point.y } });
+            if (!isMounted) return;
+            try {
+              const point = pathElement.getPointAtLength(valObj.progress * pathLength);
+              gsap.set(pulse, { attr: { cx: point.x, cy: point.y } });
+            } catch (e) {
+              // Safe catch if SVG element is detached
+            }
           },
           onComplete: () => {
+            if (!isMounted) return;
             gsap.set(pulse, { opacity: 0 });
-            // Pulse node animation when data packets land
             const targetNodeId = pathElement.getAttribute("data-target");
             const targetNode = container.querySelector(`#node-${targetNodeId}`);
-            if (targetNode) {
+            if (targetNode && isMounted) {
               gsap.fromTo(
                 targetNode,
                 { stroke: "rgba(110, 231, 201, 0.8)", strokeWidth: 2 },
                 { stroke: "rgba(244, 239, 230, 0.09)", strokeWidth: 1, duration: 0.8 }
               );
             }
-            // Repeat
-            setTimeout(runPulse, 500);
+            if (isMounted) {
+              const t = setTimeout(runPulse, 500);
+              timeouts.push(t);
+            }
           },
         });
       };
@@ -88,7 +97,8 @@ export default function NodeGraphStrip() {
     });
 
     return () => {
-      // Cleanup all GSAP tweens on this container
+      isMounted = false;
+      timeouts.forEach(clearTimeout);
       if (container) {
         gsap.killTweensOf(container.querySelectorAll("*"));
       }
@@ -114,9 +124,7 @@ export default function NodeGraphStrip() {
       className="w-full overflow-x-auto overflow-y-hidden py-10 px-4 scrollbar-hide select-none"
     >
       <div className="relative min-w-[960px] h-[280px] mx-auto">
-        {/* SVG connection lines overlay */}
         <svg className="absolute inset-0 w-full h-full pointer-events-none">
-          {/* Defined path routes */}
           <path
             id="path-0"
             data-target="2"
@@ -163,7 +171,6 @@ export default function NodeGraphStrip() {
             strokeDasharray="4 6"
           />
 
-          {/* Glowing animated data pulses */}
           {[0, 1, 2, 3, 4].map((idx) => (
             <circle
               key={idx}
@@ -171,20 +178,19 @@ export default function NodeGraphStrip() {
                 if (el) pulseRefs.current[idx] = el;
               }}
               r="5"
-              fill={idx % 2 === 0 ? "#6EE7C9" : "#FF6B4A"}
-              className="filter drop-shadow-[0_0_6px_rgba(110,231,201,0.8)]"
+              fill={idx % 2 === 0 ? "#00F5B8" : "#FF3B5C"}
+              className="filter drop-shadow-[0_0_6px_rgba(0,245,184,0.8)]"
             />
           ))}
         </svg>
 
-        {/* Node boxes */}
         {nodes.map((node) => (
           <div
             key={node.id}
             id={`node-${node.id}`}
             style={{
-              left: `${node.x - 75}px`, // Centered on x coord
-              top: `${node.y - 35}px`,  // Centered on y coord
+              left: `${node.x - 75}px`,
+              top: `${node.y - 35}px`,
             }}
             className={`absolute w-[150px] h-[70px] rounded-2xl border p-3 flex flex-col justify-between transition-all duration-300 bg-surface/90 backdrop-blur-sm shadow-lg ${getNodeColor(
               node.type
@@ -194,7 +200,6 @@ export default function NodeGraphStrip() {
               <span className="text-[10px] uppercase tracking-wider font-semibold opacity-75">
                 {node.type}
               </span>
-              {/* Active node signal dot */}
               <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
             </div>
             <span className="font-sans font-semibold text-[13px] text-text">
